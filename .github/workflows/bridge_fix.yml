@@ -1,0 +1,24 @@
+# arrow-rs-style fork-ci bridge, manual sweeps only (test for apache/infrastructure-actions#1513).
+name: "Bridge with the #1513 fix"
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  checks: write
+  pull-requests: read
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+jobs:
+  bridge:
+    if: github.repository == 'geographybuff-sandbox/fork-ci-1513-test'
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    steps:
+      - uses: geographybuff/infrastructure-actions/fork-ci@52143ed30502af1b042e8fbd2171bf6f4a115d71  # fork-ci/v1.0.1 + #1513 fix
+        with:
+          workflow: ci.yml
+          check-name: CI (fork) with fix
+          base-branches: main
+          guide-url: https://github.com/apache/arrow-rs/blob/main/CONTRIBUTING.md#pull-requests-from-forks
+          sweep-minutes: '15'
